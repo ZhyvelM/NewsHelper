@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class News {
-  String headline;
+  int id;
+  String title;
   String description;
   String site;
   String link;

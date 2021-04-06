@@ -24,16 +24,11 @@ class NewsModel extends Model {
     notifyListeners();
   }
 
-  void LoadData() {
-
-    getResult();
-  }
-
   getResult(){
     _resultList = newsList;
     if(searchQuery.isNotEmpty)
       {
-        _resultList = _resultList.where((el) => el.description.contains(searchQuery) || el.description.contains(searchQuery));
+        _resultList = _resultList.where((el) => el.description.contains(searchQuery) || el.title.contains(searchQuery));
       }
     if(dateTimeRange != null)
       {
