@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'ListModel.dart';
+import 'NewsModel.dart';
 import 'package:news_observer/utils.dart' as util;
 import 'package:path/path.dart';
 import 'News.dart';
@@ -99,7 +99,7 @@ class NewsDBWorker {
     return newsFromMap(rec.first);
   }
 
-  Future<List> getAll() async {
+  Future<List<News>> getAll() async {
     print("## NewsDBWorker.getAll()");
 
     Database db = await database;

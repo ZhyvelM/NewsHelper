@@ -3,7 +3,8 @@ import 'package:news_observer/News/News.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class NewsModel extends Model {
-
+  int stackIndex = 0;
+  var newsToView;
   List<News> newsList = [];
   List<News> _resultList = [];
   String searchQuery;
@@ -24,17 +25,26 @@ class NewsModel extends Model {
     notifyListeners();
   }
 
-  getResult(){
+  List<News> getResult(){
     _resultList = newsList;
-    if(searchQuery.isNotEmpty)
+    print("## NewsModel.getResult() : searchQuery = $searchQuery");
+    if(searchQuery != null && searchQuery.isNotEmpty)
       {
         _resultList = _resultList.where((el) => el.description.contains(searchQuery) || el.title.contains(searchQuery));
       }
+    print("## NewsModel.getResult() : dateTimeRange = $dateTimeRange");
     if(dateTimeRange != null)
       {
         _resultList = _resultList.where((el) => dateTimeRange.start.isBefore(el.dateTime) && dateTimeRange.end.isAfter(el.dateTime));
       }
     notifyListeners();
     return _resultList;
+  }
+
+  void setStackIndex(int inStackIndex){
+    print("## NewsModel.setStackIndex() : inStackIndex = $inStackIndex");
+
+    stackIndex = inStackIndex;
+    notifyListeners();
   }
 }
