@@ -37,7 +37,7 @@ class NewsDBWorker {
                   "description TEXT,"
                   "site TEXT,"
                   "link TEXT,"
-                  "date DATETIME"
+                  "date TEXT"
                   ")"
           );
         }
@@ -55,7 +55,7 @@ class NewsDBWorker {
     news.description = inMap["description"];
     news.link = inMap["link"];
     news.site = inMap["site"];
-    news.dateTime = inMap["date"];
+    news.dateTime = DateTime(inMap["date"]);
 
     print("## NewsDBWorker.newsFromMap() : news = $news");
 
@@ -71,7 +71,7 @@ class NewsDBWorker {
     map["description"] = inNews.description;
     map["link"] = inNews.link;
     map["site"] = inNews.site;
-    map["date"] = inNews.dateTime;
+    map["date"] = inNews.dateTime.toString();
 
     print("## NewsDBWorker.newsToMap() : map = $map");
     return map;
@@ -90,13 +90,21 @@ class NewsDBWorker {
   }
 
   Future<News> get(int inID) async{
-
     print("## NewsDBWorker.get() : inID = $inID");
 
     Database db = await database;
     var rec = await db.query("news", where: "id = ?", whereArgs: [inID]);
     print("## NewsDBWorker.get() : rec.first = $rec.first");
     return newsFromMap(rec.first);
+  }
+
+  Future<bool> isExist(News inNews) async{
+    print("## NewsDBWorker.isExist() : description = ${inNews.description}");
+
+    Database db = await database;
+    var rec = await db.query("news", where: "description = ?", whereArgs: [inNews.description]);
+    print("## NewsDBWorker.get() : rec.first = $rec.first");
+    return rec.isEmpty ? true : false;
   }
 
   Future<List<News>> getAll() async {

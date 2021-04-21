@@ -27,6 +27,7 @@ class NewsModel extends Model {
 
   List<News> getResult(){
     _resultList = newsList;
+    print("## NewsModel.getResult() : resultList = $_resultList");
     print("## NewsModel.getResult() : searchQuery = $searchQuery");
     if(searchQuery != null && searchQuery.isNotEmpty)
       {
@@ -37,7 +38,6 @@ class NewsModel extends Model {
       {
         _resultList = _resultList.where((el) => dateTimeRange.start.isBefore(el.dateTime) && dateTimeRange.end.isAfter(el.dateTime));
       }
-    notifyListeners();
     return _resultList;
   }
 

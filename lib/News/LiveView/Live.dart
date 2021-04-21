@@ -5,9 +5,8 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:news_observer/News/LiveView/LiveList.dart';
 
 class Live extends StatelessWidget{
-
-  Cache(){
-    print("## Cache.constructor");
+  Live(){
+    print("## Live.constructor");
     liveModel.loadData();
   }
 

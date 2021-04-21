@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_observer/News/LiveView/Live.dart';
 import 'utils.dart' as utils;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -22,22 +23,22 @@ class MyApp extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-              flexibleSpace: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TabBar(
-                      tabs: [
-                        Tab(icon: Icon(Icons.assignment), text: "News",),
-                        Tab(icon: Icon(Icons.cloud_download), text: "Cached",),
-                        Tab(icon: Icon(Icons.settings), text: "Settings",)
-                      ],
-                    ),
-                  ]
-              )
+            title: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TabBar(
+                    tabs: [
+                      Tab(icon: Icon(Icons.assignment), text: "News",),
+                      Tab(icon: Icon(Icons.cloud_download), text: "Cached",),
+                      Tab(icon: Icon(Icons.settings), text: "Settings",)
+                    ],
+                  ),
+                ]
+            )
           ),
           body: TabBarView(
             children: [
-              Scaffold(),
+              Live(),
               Cache(),
               Scaffold()
             ],

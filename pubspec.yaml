@@ -35,7 +35,9 @@ dev_dependencies:
   scoped_model:
   sqflite:
   path_provider:
-  
+  http:
+  html:
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
