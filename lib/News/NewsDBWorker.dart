@@ -32,7 +32,7 @@ class NewsDBWorker {
         onCreate: (Database inDB, int inVersion) async {
           await inDB.execute(
               "CREATE TABLE IF NOT EXISTS news ("
-                  "id INTEGER PRIMARY KEY,"
+                  "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                   "title TEXT,"
                   "description TEXT,"
                   "site TEXT,"
@@ -55,7 +55,7 @@ class NewsDBWorker {
     news.description = inMap["description"];
     news.link = inMap["link"];
     news.site = inMap["site"];
-    news.dateTime = DateTime(inMap["date"]);
+    news.dateTime = DateTime.parse(inMap["date"]);
 
     print("## NewsDBWorker.newsFromMap() : news = $news");
 
@@ -78,14 +78,9 @@ class NewsDBWorker {
   }
 
   Future create(News inNews) async{
-    print("## NewsDBWorker.create() : inNews = $inNews ");
+    print("## NewsDBWorker.create() : inNews = ${inNews.toString()} ");
 
     Database db = await database;
-    var val = await db.rawQuery("SELECT MAX(id) + 1 AS id FROM news");
-    int id = val.first["id"];
-    if(id == null) {id = 1;}
-
-    inNews.id = id;
     return db.insert("news", newsToMap(inNews));
   }
 
@@ -98,13 +93,17 @@ class NewsDBWorker {
     return newsFromMap(rec.first);
   }
 
+  Future<bool> isNotExist(News inNews)async {
+    return !await isExist(inNews);
+  }
+
   Future<bool> isExist(News inNews) async{
     print("## NewsDBWorker.isExist() : description = ${inNews.description}");
 
     Database db = await database;
-    var rec = await db.query("news", where: "description = ?", whereArgs: [inNews.description]);
-    print("## NewsDBWorker.get() : rec.first = $rec.first");
-    return rec.isEmpty ? true : false;
+    var rec = await db.query("news", where: "title = ?", whereArgs: [inNews.title]);
+    print("## NewsDBWorker.isExist() : isExists :" + rec.isEmpty.toString());
+    return rec.isNotEmpty;
   }
 
   Future<List<News>> getAll() async {
@@ -112,7 +111,7 @@ class NewsDBWorker {
 
     Database db = await database;
     var recs = await db.query("news");
-    var list = recs.isNotEmpty ? recs.map((e) => newsFromMap(e)).toList() : [];
+    List<News> list = recs.isNotEmpty ? recs.map((e) => newsFromMap(e)).toList() : [];
 
     print("## NewsDBWorker.getAll() : list = $list");
     return list;

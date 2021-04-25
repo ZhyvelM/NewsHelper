@@ -8,9 +8,9 @@ class LiveModel extends NewsModel{
 
   void loadData() async {
     newsList = await NewsGetter.parser.getNews(DateTime.now());
+    getResult();
     newsList.forEach((element) async {
-      if(!await NewsDBWorker.db.isExist(element))
-        {
+        if (await NewsDBWorker.db.isNotExist(element)) {
           NewsDBWorker.db.create(element);
         }
     });

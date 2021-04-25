@@ -6,7 +6,7 @@ class NewsModel extends Model {
   int stackIndex = 0;
   var newsToView;
   List<News> newsList = [];
-  List<News> _resultList = [];
+  List<News> resultList = [];
   String searchQuery;
   DateTimeRange dateTimeRange;
 
@@ -26,19 +26,19 @@ class NewsModel extends Model {
   }
 
   List<News> getResult(){
-    _resultList = newsList;
-    print("## NewsModel.getResult() : resultList = $_resultList");
+    resultList = newsList;
+    print("## NewsModel.getResult() : resultList = $resultList");
     print("## NewsModel.getResult() : searchQuery = $searchQuery");
     if(searchQuery != null && searchQuery.isNotEmpty)
       {
-        _resultList = _resultList.where((el) => el.description.contains(searchQuery) || el.title.contains(searchQuery));
+        resultList = resultList.where((el) => el.description.contains(searchQuery) || el.title.contains(searchQuery));
       }
     print("## NewsModel.getResult() : dateTimeRange = $dateTimeRange");
     if(dateTimeRange != null)
       {
-        _resultList = _resultList.where((el) => dateTimeRange.start.isBefore(el.dateTime) && dateTimeRange.end.isAfter(el.dateTime));
+        resultList = resultList.where((el) => dateTimeRange.start.isBefore(el.dateTime) && dateTimeRange.end.isAfter(el.dateTime));
       }
-    return _resultList;
+    return resultList;
   }
 
   void setStackIndex(int inStackIndex){

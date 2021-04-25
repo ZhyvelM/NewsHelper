@@ -21,7 +21,7 @@ class LiveList extends StatelessWidget {
                     .getResult()
                     .length,
                 itemBuilder: (BuildContext inBuildContext, int inIndex) {
-                  News news = liveModel.getResult()[inIndex];
+                  News news = liveModel.resultList[inIndex];
                   var month = news.dateTime.month;
                   var day = news.dateTime.day;
                   var hour = news.dateTime.hour;

@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                     ],
                   ),
                 ]
-            )
+            ),
           ),
           body: TabBarView(
             children: [
