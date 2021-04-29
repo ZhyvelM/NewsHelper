@@ -37,6 +37,7 @@ dev_dependencies:
   path_provider:
   http:
   html:
+  url_launcher:
 
 
 # For information on the generic Dart part of this file, see the

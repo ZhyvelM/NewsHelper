@@ -2,49 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:news_observer/News/News.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class NewsModel extends Model {
-  int stackIndex = 0;
-  var newsToView;
+abstract class NewsModel extends Model {
   List<News> newsList = [];
   List<News> resultList = [];
   String searchQuery;
-  DateTimeRange dateTimeRange;
+  bool isLoading = false;
+  DateTime date = DateTime.now();
 
-  void setChosenDate(DateTimeRange inDateRange){
+  void loadData();
 
-    print("## NewsModel.setChosenDate() inDateRange = $inDateRange");
+  void setChosenDate(DateTime inDate) {
+    print("## NewsModel.setChosenDate() inDate = $inDate");
 
-    dateTimeRange = inDateRange;
+    date = inDate;
     notifyListeners();
+    loadData();
   }
 
-  void setSearchQuery(String inSearchQuery){
+  void setSearchQuery(String inSearchQuery) {
     print("## NewsModel.setSearchQuery() inSearchQuery = $inSearchQuery");
 
     searchQuery = inSearchQuery;
     notifyListeners();
   }
 
-  List<News> getResult(){
+  List<News> getResult() {
     resultList = newsList;
     print("## NewsModel.getResult() : resultList = $resultList");
-    print("## NewsModel.getResult() : searchQuery = $searchQuery");
-    if(searchQuery != null && searchQuery.isNotEmpty)
-      {
-        resultList = resultList.where((el) => el.description.contains(searchQuery) || el.title.contains(searchQuery));
-      }
-    print("## NewsModel.getResult() : dateTimeRange = $dateTimeRange");
-    if(dateTimeRange != null)
-      {
-        resultList = resultList.where((el) => dateTimeRange.start.isBefore(el.dateTime) && dateTimeRange.end.isAfter(el.dateTime));
-      }
+    print("## NewsModel.getResult() : dateTimeRange = $date");
+    if (date != null) {
+      resultList = resultList
+          .where((el) =>
+              date.year == el.dateTime.year &&
+              date.month == el.dateTime.month &&
+              date.day == el.dateTime.day)
+          .toList();
+    }
+    print("## NewsModel.getResult() : resultList.length = ${resultList.length}");
     return resultList;
   }
 
-  void setStackIndex(int inStackIndex){
-    print("## NewsModel.setStackIndex() : inStackIndex = $inStackIndex");
-
-    stackIndex = inStackIndex;
-    notifyListeners();
+  void showAlertDialog(BuildContext context){
+    AlertDialog alert=AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(margin: EdgeInsets.only(left: 5),child:Text("Loading" )),
+        ],),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
+    );
+    print("## NewsModel.showAlertDialog()");
   }
 }
