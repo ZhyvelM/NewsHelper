@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_observer/News/NewsDBWorker.dart';
 import 'package:news_observer/News/NewsModel.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import '../../utils.dart' as utils;
 import 'package:scoped_model/scoped_model.dart';
 import '../News.dart';
 import '../NewsSearchService.dart';
@@ -44,7 +46,22 @@ class LiveList extends StatelessWidget {
                                 return
                                   Column(
                                       children: [
-                                        NewsTile(news),
+                                        Slidable(
+                                          child: NewsTile(news),
+                                          actionPane: SlidableDrawerActionPane(),
+                                          actionExtentRatio: 0.25,
+                                          secondaryActions: [
+                                            IconSlideAction(
+                                              caption: "Archive",
+                                              color: Colors.blue,
+                                              icon: Icons.cloud_download_outlined,
+                                              onTap: (){
+                                                liveModel.loadToDb(news);
+                                                utils.showMessage(inContext, "News archived");
+                                              },
+                                            )
+                                          ],
+                                        ),
                                         Divider()
                                       ]
                                   );

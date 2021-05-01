@@ -35,7 +35,7 @@ class NewsSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     final List<News> resultList =
-    listOfNews.where((element) => element.title.toLowerCase().contains(query.toLowerCase()));
+    listOfNews.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList();
 
     if (resultList.isEmpty) {
       return Center(
@@ -100,9 +100,6 @@ class SearchWidget extends StatelessWidget {
           onPressed: () async {
             DateTime picked = await utils.selectDate(inContext, model);
             print("## Chosen date: $picked");
-            if(picked == null){
-              picked = DateTime.now();
-            }
             model.setChosenDate(picked);
           },
           child: Text(
@@ -113,11 +110,11 @@ class SearchWidget extends StatelessWidget {
       ),
       Spacer(),
       Text(
-        model.date != null ? "${date.day}.${date.month}.${date.year}" : (model is LiveModel)
+        model.date != null ? "${date.day}.${date.month}.${date.year}" : ((model is LiveModel)
             ? "${DateTime.now().day}."
             "${DateTime.now().month}."
             "${DateTime.now().year}"
-            : "WHOLE HISTORY",
+            : "WHOLE HISTORY"),
         textScaleFactor: 1.7,
       ),
       Spacer(),

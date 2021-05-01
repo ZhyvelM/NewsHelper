@@ -7,7 +7,7 @@ abstract class NewsModel extends Model {
   List<News> resultList = [];
   String searchQuery;
   bool isLoading = false;
-  DateTime date = DateTime.now();
+  DateTime date;
 
   void loadData();
 

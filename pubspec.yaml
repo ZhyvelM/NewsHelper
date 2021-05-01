@@ -38,6 +38,8 @@ dev_dependencies:
   http:
   html:
   url_launcher:
+  flutter_slidable:
+  shared_preferences:
 
 
 # For information on the generic Dart part of this file, see the
