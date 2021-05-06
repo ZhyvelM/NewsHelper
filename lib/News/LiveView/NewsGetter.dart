@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:news_observer/News/LiveView/Parsers/SputnikParser.dart';
 import 'package:news_observer/News/News.dart';
 import 'package:news_observer/utils.dart' as utils;
@@ -11,22 +13,30 @@ class NewsGetter {
   Future<List<News>> getNews(DateTime day) async {
     print("## NewsGetter.getNews() : day = $day");
     List<News> newsList = [];
-    if (utils.prefs.getBool("tutby")) {
-      var tutBy = await TutByParser.parser.getNews(day);
-      if (tutBy != null) {
-        newsList += tutBy;
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        if (utils.prefs.getBool("tutby")) {
+          var tutBy = await TutByParser.parser.getNews(day);
+          if (tutBy != null) {
+            newsList += tutBy;
+          }
+        }
+        if (utils.prefs.getBool("sputnik")) {
+          var sputnik = await SputnikParser.parser.getNews(day);
+          if (sputnik != null) {
+            newsList += sputnik;
+          }
+        }
+        print("## NewsGetter.getNews() : sortedList = $newsList");
       }
-    }
-    if (utils.prefs.getBool("sputnik")) {
-      var sputnik = await SputnikParser.parser.getNews(day);
-      if (sputnik != null) {
-        newsList += sputnik;
-      }
+    } on SocketException catch (_) {
+      print('not connected');
     }
     if (newsList != null) {
-      newsList.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      newsList.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     }
-    print("## NewsGetter.getNews() : sortedList = $newsList");
     return newsList;
   }
 }

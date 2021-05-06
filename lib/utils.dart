@@ -7,8 +7,7 @@ import 'News/NewsModel.dart';
 
 Directory docsDir;
 SharedPreferences prefs;
-bool tutBy;
-bool sputnik;
+String color;
 
 Future<DateTime> selectDate(BuildContext inContext, NewsModel inModel) async {
   print("## globals.selectDate()");

@@ -1,11 +1,10 @@
-import 'package:sqflite/sqflite.dart';
-import 'NewsModel.dart';
 import 'package:news_observer/utils.dart' as util;
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'News.dart';
 
 class NewsDBWorker {
-
   NewsDBWorker._();
 
   static final NewsDBWorker db = NewsDBWorker._();
@@ -30,23 +29,19 @@ class NewsDBWorker {
 
     Database db = await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database inDB, int inVersion) async {
-          await inDB.execute(
-              "CREATE TABLE IF NOT EXISTS news ("
-                  "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                  "title TEXT,"
-                  "description TEXT,"
-                  "site TEXT,"
-                  "link TEXT,"
-                  "date TEXT"
-                  ")"
-          );
-        }
-    );
+      await inDB.execute("CREATE TABLE IF NOT EXISTS news ("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "title TEXT,"
+          "description TEXT,"
+          "site TEXT,"
+          "link TEXT,"
+          "date TEXT"
+          ")");
+    });
     return db;
   }
 
   News newsFromMap(Map inMap) {
-
     print("## NewsDBWorker.newsFromMap() : inMap = $inMap");
 
     News news = News();
@@ -62,10 +57,10 @@ class NewsDBWorker {
     return news;
   }
 
-  Map<String, dynamic> newsToMap(News inNews){
+  Map<String, dynamic> newsToMap(News inNews) {
     print("## NewsDBWorker.newsToMap() : inNews = $inNews");
 
-    Map<String,dynamic> map = Map<String,dynamic>();
+    Map<String, dynamic> map = Map<String, dynamic>();
     map["id"] = inNews.id;
     map["title"] = inNews.title;
     map["description"] = inNews.description;
@@ -77,14 +72,14 @@ class NewsDBWorker {
     return map;
   }
 
-  Future create(News inNews) async{
+  Future create(News inNews) async {
     print("## NewsDBWorker.create() : inNews = ${inNews.toString()} ");
 
     Database db = await database;
     return db.insert("news", newsToMap(inNews));
   }
 
-  Future<News> get(int inID) async{
+  Future<News> get(int inID) async {
     print("## NewsDBWorker.get() : inID = $inID");
 
     Database db = await database;
@@ -93,11 +88,11 @@ class NewsDBWorker {
     return newsFromMap(rec.first);
   }
 
-  Future<bool> isNotExist(News inNews)async {
+  Future<bool> isNotExist(News inNews) async {
     return !await isExist(inNews);
   }
 
-  Future<bool> isExist(News inNews) async{
+  Future<bool> isExist(News inNews) async {
     print("## NewsDBWorker.isExist() : description = ${inNews.description}");
 
     Database db = await database;
@@ -117,17 +112,23 @@ class NewsDBWorker {
     return list;
   }
 
-  Future update(News inNews) async{
+  Future update(News inNews) async {
     print("## NewsDBWorker.update(): inNews = $inNews");
 
     Database db = await database;
     return await db.update("news", newsToMap(inNews), where: "id = ?", whereArgs: [inNews.id]);
   }
 
-  Future delete(int inID) async{
+  Future delete(int inID) async {
     print("## NewsDBWorker.delete() : inID = $inID");
 
     Database db = await database;
     return await db.delete("news", where: "id = ?", whereArgs: [inID]);
+  }
+
+  Future clearBase() async {
+    print("## NewsDBWorker.clearBase()");
+    Database db = await database;
+    db.rawQuery("delete from news");
   }
 }

@@ -34,8 +34,9 @@ class NewsSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    final List<News> resultList =
-    listOfNews.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList();
+    final List<News> resultList = listOfNews
+        .where((element) => element.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
 
     if (resultList.isEmpty) {
       return Center(
@@ -48,10 +49,7 @@ class NewsSearchDelegate extends SearchDelegate {
       itemCount: resultList.length,
       itemBuilder: (BuildContext inBuildContext, int inIndex) {
         News news = resultList[inIndex];
-        return Column(children: [
-          NewsTile(news),
-          Divider()
-        ]);
+        return Column(children: [NewsTile(news), Divider()]);
       },
     );
   }
@@ -96,26 +94,24 @@ class SearchWidget extends StatelessWidget {
     return Row(children: [
       Padding(
         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        child: ElevatedButton(
+        child: TextButton(
           onPressed: () async {
             DateTime picked = await utils.selectDate(inContext, model);
             print("## Chosen date: $picked");
             model.setChosenDate(picked);
           },
           child: Text(
-            "CHANGE DATE",
-            textScaleFactor: 1,
+            model.date != null
+                ? "${date.day}.${date.month}.${date.year}"
+                : ((model is LiveModel)
+                    ? "${DateTime.now().day < 10 ? "0" : ""}${DateTime.now().day}."
+                        "${DateTime.now().month < 10 ? "0" : ""}${DateTime.now().month}."
+                        "${DateTime.now().year}"
+                    : "WHOLE HISTORY"),
+            textScaleFactor: 1.7,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-      ),
-      Spacer(),
-      Text(
-        model.date != null ? "${date.day}.${date.month}.${date.year}" : ((model is LiveModel)
-            ? "${DateTime.now().day}."
-            "${DateTime.now().month}."
-            "${DateTime.now().year}"
-            : "WHOLE HISTORY"),
-        textScaleFactor: 1.7,
       ),
       Spacer(),
       IconButton(

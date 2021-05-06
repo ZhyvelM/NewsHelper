@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class News {
@@ -16,11 +17,10 @@ class News {
 }
 
 // ignore: must_be_immutable
-class NewsTile extends StatelessWidget{
-
+class NewsTile extends StatelessWidget {
   News news;
 
-  NewsTile(News inNews){
+  NewsTile(News inNews) {
     this.news = inNews;
   }
 
@@ -36,14 +36,15 @@ class NewsTile extends StatelessWidget{
         news.title,
         textScaleFactor: 1,
       ),
-      subtitle:
-      Row( children: [Flexible(
-        child: Text(
-          news.description,
-          overflow: TextOverflow.ellipsis,
-          textScaleFactor: 0.8,
+      subtitle: Row(children: [
+        Flexible(
+          child: Text(
+            news.description,
+            overflow: TextOverflow.ellipsis,
+            textScaleFactor: 0.8,
+          ),
         ),
-      ),]),
+      ]),
       trailing: SizedBox.fromSize(
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -69,7 +70,9 @@ class NewsTile extends StatelessWidget{
           throw 'Could not launch $url';
         }
       },
+      onLongPress: () {
+        Share.share(news.link.toString());
+      },
     );
   }
-
 }

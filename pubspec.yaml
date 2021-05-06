@@ -40,6 +40,7 @@ dev_dependencies:
   url_launcher:
   flutter_slidable:
   shared_preferences:
+  share:
 
 
 # For information on the generic Dart part of this file, see the

@@ -18,6 +18,7 @@ void main() {
       print("## main preferences init");
       utils.prefs.setBool("tutby", true);
       utils.prefs.setBool("sputnik", true);
+      utils.prefs.setString("color", "blue");
     }
     utils.docsDir = docsDir;
     runApp(MyApp());
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
             ]),
           ),
           body: TabBarView(
-            children: [Live(), Cache(), Settings()],
+            children: [Live(), Cache(), Settings(context)],
           ),
         ),
       ),

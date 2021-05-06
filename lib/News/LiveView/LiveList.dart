@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:news_observer/News/CacheView/CacheModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../utils.dart' as utils;
@@ -18,62 +20,66 @@ class LiveList extends StatelessWidget {
       child: ScopedModelDescendant<LiveModel>(
         builder: (BuildContext inContext, Widget inChild, LiveModel inModel) {
           return Scaffold(
-              body: (liveModel.newsList != null || liveModel.newsList.length > 0)
-                  ? Column(children: [
-                      SearchWidget(liveModel.date, liveModel),
-                      FutureBuilder(
-                          builder: (BuildContext inBuildContext, AsyncSnapshot<bool> snapshot) {
-                        if (liveModel.isLoading) {
-                          return Center(
-                            child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
-                                child: SizedBox(
-                                  child: CircularProgressIndicator(),
-                                  width: 30,
-                                  height: 30,
-                                )),
-                          );
-                        } else
-                          return (liveModel.resultList.length > 0)
-                              ? Expanded(
-                                  child: ListView.builder(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  itemCount: liveModel.resultList.length,
-                                  itemBuilder: (BuildContext inBuildContext, int inIndex) {
-                                    News news = liveModel.resultList[inIndex];
-                                    return Column(children: [
-                                      Slidable(
-                                        child: NewsTile(news),
-                                        actionPane: SlidableDrawerActionPane(),
-                                        actionExtentRatio: 0.25,
-                                        secondaryActions: [
-                                          IconSlideAction(
-                                            caption: "Archive",
-                                            color: Colors.blue,
-                                            icon: Icons.cloud_download_outlined,
-                                            onTap: () {
-                                              liveModel.loadToDb(news);
-                                              utils.showMessage(inContext, "News archived");
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                      Divider()
-                                    ]);
+              body: Column(children: [
+            SearchWidget(liveModel.date, liveModel),
+            FutureBuilder(builder: (BuildContext inBuildContext, AsyncSnapshot<bool> snapshot) {
+              if (liveModel.isLoading) {
+                return Center(
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
+                      child: SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 30,
+                        height: 30,
+                      )),
+                );
+              } else
+                return (liveModel.resultList.length > 0)
+                    ? Expanded(
+                        child: RefreshIndicator(
+                            onRefresh: liveModel.reload,
+                            child: ListView.builder(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              itemCount: liveModel.resultList.length,
+                              itemBuilder: (BuildContext inBuildContext, int inIndex) {
+                                News news = liveModel.resultList[inIndex];
+                                return Column(children: [
+                                  Slidable(
+                                    child: NewsTile(news),
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actionExtentRatio: 0.25,
+                                    secondaryActions: [
+                                      IconSlideAction(
+                                        caption: "Archive",
+                                        color: Colors.blue,
+                                        icon: Icons.cloud_download_outlined,
+                                        onTap: () {
+                                          liveModel.loadToDb(news);
+                                          cacheModel.loadData();
+                                          utils.showMessage(inContext, "News archived");
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Divider()
+                                ]);
+                              },
+                            )))
+                    : Container(
+                        height: 400,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Nothing was found or network error happened"),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    liveModel.reload();
                                   },
-                                ))
-                              : Center(
-                                  child: Text("Nothing was found or network error happend"),
-                                );
-                      })
-                    ])
-                  : Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            liveModel.loadData();
-                          },
-                          child: Text("Load news")),
-                    ));
+                                  child: Text("Load news")),
+                            ]));
+            })
+          ]));
         },
       ),
     );
