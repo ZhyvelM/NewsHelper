@@ -40,10 +40,11 @@ class SputnikParser extends IParserInterface {
             .getElementsByTagName("p")[0]
             .text;
         news.site = "SPUTNIK.BY";
-        news.link = element
-            .getElementsByClassName("b-plainlist__title")[0]
-            .getElementsByTagName("a")[0]
-            .attributes["href"];
+        news.link = "https://sputnik.by" +
+            element
+                .getElementsByClassName("b-plainlist__title")[0]
+                .getElementsByTagName("a")[0]
+                .attributes["href"];
         String date = element.getElementsByClassName("b-plainlist__date")[0].text;
         news.dateTime = DateTime(
             day.year,
