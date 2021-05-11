@@ -9,7 +9,7 @@
         </intent>
     </queries>
    <application
-        android:label="news_observer"
+        android:label="news_helper"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
